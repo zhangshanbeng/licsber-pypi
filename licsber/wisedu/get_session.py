@@ -8,7 +8,7 @@ from .paddle_utils import predict_captcha
 from .wisedu_utils import need_captcha, check_captcha, get_captcha, encrypt
 
 
-def get_wisedu_session(url, no, pwd, captcha_retry=99, remember_me=True):
+def get_wisedu_session(url, no, pwd, s=get_session(), captcha_retry=99, remember_me=True):
     """
     对接"金智教务统一登录系统"的API.
     :param url: 访问跳转登录页的url, 通常以authserver开头.
@@ -46,7 +46,8 @@ def get_wisedu_session(url, no, pwd, captcha_retry=99, remember_me=True):
         salt = res.find('input', id='pwdDefaultEncryptSalt')['value']
         login_url = res.find('form', id='casLoginForm')['action']
         login_url = urljoin(url, login_url)
-
+        login_url = 'https://webvpn.njit.edu.cn'+login_url
+        
         for i in res.find_all('input'):
             if 'name' in i.attrs and i['name'] in data:
                 data[i['name']] = i['value']
@@ -64,8 +65,6 @@ def get_wisedu_session(url, no, pwd, captcha_retry=99, remember_me=True):
             pwd_error = True
 
         return len(session.cookies) != origin_cookie_nums
-
-    s = get_session()
 
     pwd_error = False
     while captcha_retry and not retry(s):
