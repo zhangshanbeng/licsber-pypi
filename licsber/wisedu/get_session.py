@@ -45,7 +45,6 @@ def get_wisedu_session(url, no, pwd, s=get_session(), captcha_retry=99, remember
 
         salt = res.find('input', id='pwdDefaultEncryptSalt')['value']
         login_url = res.find('form', id='casLoginForm')['action']
-        login_url = urljoin(url, login_url)
         login_url = 'https://webvpn.njit.edu.cn'+login_url
         
         for i in res.find_all('input'):
